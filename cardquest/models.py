@@ -1,6 +1,6 @@
 from django.db import models
 
-
+# Create your models here.
 class BaseModel(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True, db_index=True)
@@ -15,16 +15,17 @@ class Trainer(BaseModel):
     location = models.CharField(max_length=250, null=True, blank=True)
     email = models.EmailField(max_length=100, null=True, blank=True)
 
-
     def __str__(self):
         return self.name
+
 
 class PokemonCard(BaseModel):
     RARITY_CHOICES = (
         ('Common', 'Common'),
         ('Uncommon', 'Uncommon'),
         ('Rare', 'Rare'),
-)
+    )
+
     CARDTYPE_CHOICES = (
         ('Fire', 'Fire'),
         ('Water', 'Water'),
@@ -44,13 +45,12 @@ class PokemonCard(BaseModel):
         ('Ghost', 'Ghost'),
         ('Steel', 'Steel'),
         ('Fairy', 'Fairy'),
-)
+    )
+
     name = models.CharField(max_length=100, null=True, blank=True)
-    rarity = models.CharField(
-        max_length=100, null=True, blank=True, choices=RARITY_CHOICES)
+    rarity = models.CharField(max_length=100, null=True, choices=RARITY_CHOICES)
     hp = models.IntegerField(null=True, blank=True)
-    card_type = models.CharField(
-        max_length=100, null=True, blank=True, choices=CARDTYPE_CHOICES)
+    card_type = models.CharField(max_length=100, null=True, blank=True, choices=CARDTYPE_CHOICES)
     attack = models.CharField(max_length=100, null=True, blank=True)
     description = models.CharField(max_length=250, null=True, blank=True)
     weakness = models.CharField(max_length=250, null=True, blank=True)
@@ -59,9 +59,13 @@ class PokemonCard(BaseModel):
     evolution_stage = models.CharField(max_length=250, null=True, blank=True)
     abilities = models.CharField(max_length=250, null=True, blank=True)
 
+    def __str__(self) :
+        return self.name
+
 class Collection(BaseModel):
-    card = models.ForeignKey(PokemonCard, blank=True,
-                             null=True, on_delete=models.CASCADE)
-trainer = models.ForeignKey(
-    Trainer, blank=True, null=True, on_delete=models.CASCADE)
-collection_date = models.DateField()
+    card = models.ForeignKey(PokemonCard, blank=True, null=True, on_delete=models.CASCADE)
+    trainer = models.ForeignKey(Trainer, blank=True, null=True, on_delete=models.CASCADE)
+    collection_date = models.DateField()
+
+    def __str__(self) :
+        return f"{self.trainer.name} {self.card.name}"
